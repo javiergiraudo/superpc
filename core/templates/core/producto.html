@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producto</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <link href="{% static 'core/css/style.css'%}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  
+
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <img src="{% static 'core/img/rayo.png' %}" width="100px" height="50px" alt="" />
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Inicio <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'producto' 'ins' 1 %}">Producto</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'nosotros' %}">Nosotros</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'registrar' %}">Ingresar</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'ingresar' %}">Ingresar <span class="sr-only"></span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+    
+
+    <div class="container">
+        <h1 style="text-align: center !important;">
+            Mantenedor de productos
+        </h1>
+        {% if form %}
+        <form method="POST" action="" enctype="multipart/form-data" id="formulario">
+            <div class="form-group">
+                {% csrf_token %} {{ form.as_p }}
+            </div>
+            <input type="submit" class="btn btn-primary btnwidth" id="id_guardar" value="Guardar">
+            <!-- <input type="reset" class="btn btn-primary btnwidth" id="id_nuevo" value="Nuevo"> -->
+            <a class="btn btn-success btnwidth" href="{% url 'producto' 'ins' 1 %}">Nuevo</a>
+            {% if id_producto != '1' %}
+            <a class="btn btn-danger btnwidth" href="{% url 'producto' 'del' id_producto %}">Eliminar</a>
+            {% endif %}
+            <a class="btn btn-info btnwidth" href="{% url 'home' %}">Inicio</a>
+            {% if mesg %}
+            <div id="form_message" class="alert alert-danger" role="alert">{{ mesg }}</div>
+            {% endif %}
+        </form>
+        {% endif %}
+        {% if list %}
+        <table id="tabla_datos">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Detalles</th>
+                    <th>Imagen</th>
+                    <th>Categoría</th>
+                    <th class="titulo_boton">Editar</th>
+                    <th class="titulo_boton">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pro in list %}
+                <tr>
+                    <td>{{ pro.id_producto }}</td>
+                    <td>{{ pro.producto }}</td>
+                    <td>{{ pro.detalles }}</td>
+                    <td><img src="/media/{{ pro.imagen }}" class="mini_auto" alt=""></td>
+                    <td>{{ pro.categoria }}</td>
+                    <td><a href="{% url 'producto' 'upd' pro.id_producto %}" 
+                        class="btn btn-primary btn-sm boton_chico">Editar</a></td>
+                    <td><a href="{% url 'producto' 'del' pro.id_producto %}" 
+                        class="btn btn-danger btn-sm boton_chico">Eliminar</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        <br>
+        <a href="{% url 'poblar_bd' %}" class="btn btn-info btn-sm">RECARGAR PRODUCTOS</a>
+        <a href="http://127.0.0.1:8000/admin" class="btn btn-info btn-sm">Administración</a>
+        <a href="{% url 'home' %}" class="btn btn-info btn-sm">Inicio</a>
+    </div>
+</body>
+</html>
